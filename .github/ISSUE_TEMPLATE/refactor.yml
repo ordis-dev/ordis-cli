@@ -90,3 +90,15 @@ body:
         - Code is more readable and maintainable
     validations:
       required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: How urgent is this refactoring?
+      options:
+        - Low
+        - Medium
+        - High
+    validations:
+      required: true

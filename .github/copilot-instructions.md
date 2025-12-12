@@ -57,6 +57,12 @@ examples/            # Sample schemas and input files
 - **Schema format**: JSON-based field definitions with types and constraints
 - **Output format**: Validated JSON matching the schema or structured error response
 
----
+## Contributing
+
+When creating issues or pull requests:
+
+- Use issue templates in `.github/ISSUE_TEMPLATE/` for structured bug reports, features, etc.
+- Use PR template in `.github/PULL_REQUEST_TEMPLATE.md` for consistent pull requests
+- See `docs/CONTRIBUTING.md` for complete development workflow and standards
 
 **Update this file as the project grows.** Add new patterns, directory structures, and conventions as they emerge.

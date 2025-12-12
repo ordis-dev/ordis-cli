@@ -10,7 +10,11 @@
     },
     "currency": {
       "type": "string",
-      "enum": ["USD", "SGD", "EUR"],
+      "enum": [
+        "USD",
+        "SGD",
+        "EUR"
+      ],
       "description": "Currency code"
     },
     "date": {
@@ -18,5 +22,14 @@
       "optional": true,
       "description": "Invoice date"
     }
+  },
+  "confidence": {
+    "threshold": 85,
+    "failOnLowConfidence": true
+  },
+  "metadata": {
+    "name": "Invoice Extraction Schema",
+    "version": "1.0.0",
+    "description": "Extracts invoice data with 85% minimum confidence requirement"
   }
 }

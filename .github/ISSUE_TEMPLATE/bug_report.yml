@@ -60,6 +60,19 @@ body:
     validations:
       required: true
 
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      description: How severe is this bug?
+      options:
+        - Low (minor inconvenience)
+        - Medium (affects functionality)
+        - High (blocks important work)
+        - Critical (complete failure)
+    validations:
+      required: true
+
   - type: textarea
     id: logs
     attributes:
