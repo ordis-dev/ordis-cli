@@ -8,12 +8,15 @@ Ordis is a local-first CLI tool that turns messy, unstructured text into clean, 
 
 **✅ CLI functional** - Core extraction pipeline working with real LLMs. Ready for testing and feedback.
 
+**✅ Programmatic API** - Can be used as an npm package in Node.js applications.
+
 ## Features
 
 - **Local-first extraction**: Supports Ollama, LM Studio, or any OpenAI-compatible endpoint
 - **Schema-first workflow**: Define your data structure upfront
 - **Deterministic output**: Returns validated records or structured failures
-- **Minimal CLI**: Fast experimentation with simple commands
+- **Dual-purpose**: Use as CLI tool or import as library
+- **TypeScript support**: Full type definitions included
 
 ## Example
 
@@ -53,6 +56,8 @@ Works with any service exposing an OpenAI-compatible API:
 
 ## Installation
 
+### As a CLI Tool
+
 ```bash
 git clone https://github.com/ordis-dev/ordis-cli
 cd ordis-cli
@@ -66,6 +71,86 @@ Run the CLI:
 node dist/cli.js --help
 ```
 
+### As an npm Package
+
+```bash
+npm install ordis-cli
+```
+
+## Usage
+
+### CLI Usage
+
+Extract data from text using a schema:
+
+```bash
+ordis extract \
+  --schema examples/invoice.schema.json \
+  --input examples/invoice.txt \
+  --base http://localhost:11434/v1 \
+  --model llama3.1:8b \
+  --debug
+```
+
+### Programmatic Usage
+
+Use ordis-cli as a library in your Node.js application:
+
+```typescript
+import { extract, loadSchema, LLMClient } from 'ordis-cli';
+
+// Load schema from file
+const schema = await loadSchema('./invoice.schema.json');
+
+// Or create schema from object
+import { loadSchemaFromObject } from 'ordis-cli';
+const schema = loadSchemaFromObject({
+  fields: {
+    invoice_id: { type: 'string' },
+    amount: { type: 'number' },
+    currency: { type: 'string', enum: ['USD', 'EUR', 'SGD'] }
+  }
+});
+
+// Configure LLM
+const llmConfig = {
+  baseURL: 'http://localhost:11434/v1',
+  model: 'llama3.2:3b'
+};
+
+// Extract data
+const result = await extract({
+  input: 'Invoice #INV-2024-0042 for $1,250.00 USD',
+  schema,
+  llmConfig
+});
+
+if (result.success) {
+  console.log(result.data);
+  // { invoice_id: 'INV-2024-0042', amount: 1250, currency: 'USD' }
+  console.log('Confidence:', result.confidence);
+} else {
+  console.error('Extraction failed:', result.errors);
+}
+```
+
+**Using LLM Presets:**
+
+```typescript
+import { extract, loadSchema, LLMPresets } from 'ordis-cli';
+
+const schema = await loadSchema('./schema.json');
+
+// Use preset configurations
+const result = await extract({
+  input: text,
+  schema,
+  llmConfig: LLMPresets.ollama('llama3.2:3b')
+  // Or: LLMPresets.openai(apiKey, 'gpt-4o-mini')
+  // Or: LLMPresets.lmStudio('local-model')
+});
+```
+
 ## What Works
 
 - ✅ Schema loader and validator
@@ -73,7 +158,9 @@ node dist/cli.js --help
 - ✅ Universal LLM client (OpenAI-compatible APIs)
 - ✅ Structured error system
 - ✅ CLI extraction command
+- ✅ Programmatic API for library usage
 - ✅ Field-level confidence tracking
+- ✅ TypeScript type definitions
 
 ## Roadmap
 

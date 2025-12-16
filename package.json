@@ -3,9 +3,16 @@
   "version": "0.1.0",
   "type": "module",
   "description": "Schema-first LLM extraction tool that turns unstructured text into validated structured data",
-  "main": "dist/cli.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "bin": {
     "ordis": "dist/cli.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
   },
   "scripts": {
     "build": "tsc",
