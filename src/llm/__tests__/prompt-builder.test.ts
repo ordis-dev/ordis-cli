@@ -21,7 +21,7 @@ describe('Prompt Builder', () => {
             expect(prompt).toContain('data extraction');
             expect(prompt).toContain('name: string');
             expect(prompt).toContain('age: number');
-            expect(prompt).toContain('ONLY valid JSON');
+            expect(prompt).toContain('only valid JSON');
         });
 
         it('should include field descriptions', () => {
@@ -108,7 +108,7 @@ describe('Prompt Builder', () => {
             const prompt = buildSystemPrompt(schema);
 
             expect(prompt).toContain('threshold: 85%');
-            expect(prompt).toContain('per-field confidence');
+            expect(prompt).toContain('confidence score');
         });
 
         it('should include response format', () => {
