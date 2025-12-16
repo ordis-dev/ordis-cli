@@ -17,10 +17,10 @@ const execAsync = promisify(exec);
 // Models to test
 const MODELS = [
     'llama3.2:3b',
+    'llama3.1:8b',       // Larger llama model with better reasoning
     'qwen2.5:7b',
-    'mistral:7b',
-    'gemma2:2b',
-    'phi3:3.8b'
+    'deepseek-r1:7b',     // Reasoning-focused model for structured extraction
+    'deepseek-r1:14b'     // Larger reasoning model - should be even more accurate
 ];
 
 // Test examples
@@ -559,6 +559,18 @@ async function runModelBenchmark() {
     // Test each model with each example
     for (const model of modelsToTest) {
         console.log(`\nTesting ${model}...`);
+        
+        // Warmup: run a quick inference to load model into GPU
+        console.log(`  Warming up ${model}...`);
+        try {
+            await testModel(model, 'warmup', 'warmup', 
+                { fields: { test: { type: 'string' } } }, 
+                'Quick warmup test', 
+                { test: 'warmup' }
+            );
+        } catch (error) {
+            console.log(`  Note: Warmup failed, continuing anyway`);
+        }
         
         for (const example of EXAMPLES) {
             testNumber++;
