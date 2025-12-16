@@ -16,6 +16,25 @@ npx tsx benchmarks/schema-validation.bench.ts
 
 ## Benchmark Files
 
+### model-comparison.bench.ts
+Comprehensive benchmark comparing multiple LLM models on accuracy, speed, and quality across 5 test examples of varying difficulty.
+
+**Features:**
+- Tests 5 popular local models (llama3.2, qwen2.5, mistral, gemma2, phi3)
+- Measures accuracy against expected outputs
+- Tracks confidence scores and field-level issues
+- Automatically saves detailed reports (JSON + Markdown) in `results/`
+- Includes git commit info for tracking improvements over time
+
+**Typical Results:**
+- llama3.2:3b: 1.6s avg, 84% accuracy, best balance
+- qwen2.5:7b: 6.3s avg, 98% accuracy, most accurate
+- mistral:7b: 6.0s avg, 80% accuracy
+- gemma2:2b: 1.9s avg, 40% accuracy (struggles with complex)
+- phi3:3.8b: 2.9s avg, 0% accuracy (not suitable)
+
+**Reports saved to:** `benchmarks/results/model-comparison-{date}-{time}-{commit}.{json,md}`
+
 ### schema-validation.bench.ts
 Measures schema validation performance with simple and complex schemas.
 
