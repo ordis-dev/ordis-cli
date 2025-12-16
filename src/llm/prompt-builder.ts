@@ -10,16 +10,15 @@ import type { Schema } from '../schemas/types.js';
 export function buildSystemPrompt(schema: Schema): string {
     const { fields, metadata, confidence } = schema;
 
-    let prompt = `You are a data extraction assistant. Extract structured data from the provided text according to the schema below.
+    let prompt = `You are a structured data extraction system. Extract information from text according to the schema below.
 
-CRITICAL INSTRUCTIONS:
-1. Return ONLY valid JSON matching the schema
-2. Include confidence scores (0-100) for each field, even if field is null
-3. Do not include any explanation or markdown formatting
-4. For optional fields: set value to null if not found or confidence too low
-5. ALWAYS include ALL fields in confidenceByField, even if value is null
+Rules:
+- Return only valid JSON (no markdown, no explanation)
+- Include a confidence score (0-100) for each field
+- Use null for missing or uncertain values
+- Include all fields in the response, even if null
 
-SCHEMA:
+Schema:
 `;
 
     // Add field definitions
@@ -35,7 +34,9 @@ SCHEMA:
             prompt += ` - allowed values: ${fieldDef.enum.join(', ')}`;
         }
         if (fieldDef.min !== undefined || fieldDef.max !== undefined) {
-            prompt += ` - range: ${fieldDef.min ?? '−∞'} to ${fieldDef.max ?? '∞'}`;
+            const min = fieldDef.min !== undefined ? fieldDef.min : 'null';
+            const max = fieldDef.max !== undefined ? fieldDef.max : 'null';
+            prompt += ` - range: ${min} to ${max}`;
         }
         if (fieldDef.pattern) {
             prompt += ` - pattern: ${fieldDef.pattern}`;
@@ -44,25 +45,28 @@ SCHEMA:
 
     // Add confidence requirements
     if (confidence) {
-        prompt += `\n\nCONFIDENCE REQUIREMENTS:
-- Minimum confidence threshold: ${confidence.threshold}%
-- Provide per-field confidence scores in your response
-`;
+        prompt += `\n\nConfidence threshold: ${confidence.threshold}% (extractions below this may be rejected)`;
     }
 
-    // Add response format
-    prompt += `\n\nRESPONSE FORMAT:
+    // Add response format with concrete example
+    const exampleFields = Object.keys(fields).slice(0, 2);
+    const field1 = exampleFields[0] || 'field1';
+    const field2 = exampleFields[1] || 'field2';
+    
+    prompt += `\n\nResponse format:
 {
   "data": {
-    ${Object.keys(fields).map(name => `"${name}": <extracted_value_or_null>`).join(',\n    ')}
+    "${field1}": "extracted value or null",
+    "${field2}": 42,
+    ...
   },
-  "confidence": <overall_confidence_0_to_100>,
+  "confidence": 85,
   "confidenceByField": {
-    ${Object.keys(fields).map(name => `"${name}": <confidence_0_to_100_or_0_if_not_found>`).join(',\n    ')}
+    "${field1}": 90,
+    "${field2}": 80,
+    ...
   }
-}
-
-IMPORTANT: Include ALL fields in both data and confidenceByField. Use null for data and 0 for confidence if field not found or uncertain.`;
+}`;
 
     return prompt;
 }
