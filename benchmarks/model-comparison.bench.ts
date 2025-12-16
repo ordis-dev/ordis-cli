@@ -434,14 +434,18 @@ function generateMarkdownReport(report: BenchmarkReport): string {
         md += `### ${model}\n\n`;
         md += `**Overall:** ${avgTime.toFixed(2)}s avg | ${avgAccuracy.toFixed(0)}% accuracy | ${avgQuality.toFixed(0)}% quality\n\n`;
         
-        md += `| Difficulty | Example | Time | Conf | Acc | Issues |\n`;
-        md += `|------------|---------|------|------|-----|--------|\n`;
+        md += `| Status | Difficulty   | Example                     | Time  | Conf | Acc  | Issues |\n`;
+        md += `|--------|--------------|-----------------------------| ------|------|------|--------|\n`;
         
         for (const result of modelResults) {
             const status = result.success ? '✓' : '✗';
-            const time = (result.duration / 1000).toFixed(2);
+            const time = (result.duration / 1000).toFixed(2) + 's';
+            const diff = result.difficulty.padEnd(12);
+            const example = result.example.padEnd(27);
+            const conf = (result.confidence + '%').padEnd(4);
+            const acc = (result.accuracy.toFixed(0) + '%').padEnd(4);
             const issues = result.fieldIssues.length;
-            md += `| ${result.difficulty} | ${result.example} | ${status} ${time}s | ${result.confidence}% | ${result.accuracy.toFixed(0)}% | ${issues} |\n`;
+            md += `| ${status}      | ${diff} | ${example} | ${time.padEnd(5)} | ${conf} | ${acc} | ${issues}      |\n`;
         }
         
         md += `\n`;
