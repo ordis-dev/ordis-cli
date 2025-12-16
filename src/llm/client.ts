@@ -29,7 +29,7 @@ export class LLMClient {
         this.config = {
             temperature: 0.0,
             maxTokens: 2000,
-            timeout: 30000,
+            timeout: 120000, // 120 seconds for slower local models
             ...config,
         };
         this.retryConfig = config.retries || {

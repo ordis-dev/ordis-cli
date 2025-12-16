@@ -14,9 +14,10 @@ export function buildSystemPrompt(schema: Schema): string {
 
 CRITICAL INSTRUCTIONS:
 1. Return ONLY valid JSON matching the schema
-2. Include confidence scores (0-100) for each field
+2. Include confidence scores (0-100) for each field, even if field is null
 3. Do not include any explanation or markdown formatting
-4. If a field cannot be extracted, omit it (for optional fields) or use null
+4. For optional fields: set value to null if not found or confidence too low
+5. ALWAYS include ALL fields in confidenceByField, even if value is null
 
 SCHEMA:
 `;
@@ -53,13 +54,15 @@ SCHEMA:
     prompt += `\n\nRESPONSE FORMAT:
 {
   "data": {
-    ${Object.keys(fields).map(name => `"${name}": <extracted_value>`).join(',\n    ')}
+    ${Object.keys(fields).map(name => `"${name}": <extracted_value_or_null>`).join(',\n    ')}
   },
   "confidence": <overall_confidence_0_to_100>,
   "confidenceByField": {
-    ${Object.keys(fields).map(name => `"${name}": <confidence_0_to_100>`).join(',\n    ')}
+    ${Object.keys(fields).map(name => `"${name}": <confidence_0_to_100_or_0_if_not_found>`).join(',\n    ')}
   }
-}`;
+}
+
+IMPORTANT: Include ALL fields in both data and confidenceByField. Use null for data and 0 for confidence if field not found or uncertain.`;
 
     return prompt;
 }

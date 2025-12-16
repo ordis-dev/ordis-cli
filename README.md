@@ -6,7 +6,7 @@ Ordis is a local-first CLI tool that turns messy, unstructured text into clean, 
 
 ## Status
 
-Early prototype. Not production-ready.
+**✅ CLI functional** - Core extraction pipeline working with real LLMs. Ready for testing and feedback.
 
 ## Features
 
@@ -66,14 +66,22 @@ Run the CLI:
 node dist/cli.js --help
 ```
 
+## What Works
+
+- ✅ Schema loader and validator
+- ✅ Prompt builder with confidence scoring
+- ✅ Universal LLM client (OpenAI-compatible APIs)
+- ✅ Structured error system
+- ✅ CLI extraction command
+- ✅ Field-level confidence tracking
+
 ## Roadmap
 
-- Schema loader and validator
-- Prompt builder
-- Universal LLM caller
-- Structured error system
-- Config file support
-- Rust core (future)
+- [ ] Config file support ([#16](https://github.com/ordis-dev/ordis-cli/issues/16))
+- [ ] Output formatting options ([#14](https://github.com/ordis-dev/ordis-cli/issues/14))
+- [ ] Batch extraction ([#19](https://github.com/ordis-dev/ordis-cli/issues/19))
+- [ ] More example schemas ([#13](https://github.com/ordis-dev/ordis-cli/issues/13))
+- [ ] Performance benchmarks ([#18](https://github.com/ordis-dev/ordis-cli/issues/18))
 
 ## Contributing
 

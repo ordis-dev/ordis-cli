@@ -33,6 +33,9 @@
     "url": "https://github.com/ordis-dev/ordis-cli/issues"
   },
   "homepage": "https://github.com/ordis-dev/ordis-cli#readme",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "devDependencies": {
     "@types/node": "^24.10.2",
     "@vitest/ui": "^4.0.15",
