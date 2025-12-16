@@ -20,7 +20,8 @@
     "clean": "rm -rf dist",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:ui": "vitest --ui"
+    "test:ui": "vitest --ui",
+    "benchmark": "tsx benchmarks/runner.ts"
   },
   "repository": {
     "type": "git",

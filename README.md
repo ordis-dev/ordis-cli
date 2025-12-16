@@ -161,6 +161,16 @@ const result = await extract({
 - ✅ Programmatic API for library usage
 - ✅ Field-level confidence tracking
 - ✅ TypeScript type definitions
+- ✅ Performance benchmarks
+
+## Performance
+
+Pipeline overhead is negligible (~1-2ms). LLM calls dominate execution time (1-10s depending on model). See [benchmarks/README.md](benchmarks/README.md) for detailed metrics.
+
+Run benchmarks:
+```bash
+npm run benchmark
+```
 
 ## Roadmap
 
@@ -168,7 +178,6 @@ const result = await extract({
 - [ ] Output formatting options ([#14](https://github.com/ordis-dev/ordis-cli/issues/14))
 - [ ] Batch extraction ([#19](https://github.com/ordis-dev/ordis-cli/issues/19))
 - [ ] More example schemas ([#13](https://github.com/ordis-dev/ordis-cli/issues/13))
-- [ ] Performance benchmarks ([#18](https://github.com/ordis-dev/ordis-cli/issues/18))
 
 ## Contributing
 
