@@ -17,7 +17,6 @@ const schema = loadSchemaFromObject({
     },
     confidence: {
         threshold: 80,
-        required: true,
         failOnLowConfidence: true
     }
 });
@@ -78,7 +77,12 @@ const mockLLMConfig: LLMConfig = {
 
 // Mock successful response
 const mockResponse: LLMResponse = {
+    id: 'mock-id',
+    object: 'chat.completion',
+    created: Date.now(),
+    model: 'mock-model',
     choices: [{
+        index: 0,
         message: {
             role: 'assistant',
             content: JSON.stringify({
@@ -96,7 +100,8 @@ const mockResponse: LLMResponse = {
                     date: 90
                 }
             })
-        }
+        },
+        finish_reason: 'stop'
     }]
 };
 

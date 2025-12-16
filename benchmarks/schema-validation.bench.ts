@@ -29,7 +29,6 @@ const complexSchema: Schema = {
     },
     confidence: {
         threshold: 80,
-        required: true,
         failOnLowConfidence: true
     }
 };
