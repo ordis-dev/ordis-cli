@@ -1,4 +1,4 @@
-# Contributing to ordis-cli
+# Contributing to Ordis
 
 Thank you for your interest in contributing! This document outlines how to contribute to this project.
 
@@ -12,8 +12,8 @@ Thank you for your interest in contributing! This document outlines how to contr
 ### Setup
 
 ```bash
-git clone https://github.com/ordis-dev/ordis-cli
-cd ordis-cli
+git clone https://github.com/ordis-dev/ordis
+cd ordis
 npm install
 npm run build
 ```

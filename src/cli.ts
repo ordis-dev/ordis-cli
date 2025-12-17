@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 /**
- * Ordis CLI - Schema-first extraction tool
- * Entrypoint for the command-line interface
+ * Ordis - Schema-first extraction tool
+ * CLI entrypoint
  */
 
 import * as fs from 'fs/promises';
@@ -60,7 +60,7 @@ function parseArgs(args: string[]): CliArgs {
 
 function showHelp(): void {
     console.log(`
-Ordis CLI - Schema-first LLM extraction tool
+Ordis - Schema-first LLM extraction tool
 
 USAGE:
   ordis extract [OPTIONS]
@@ -85,12 +85,12 @@ EXAMPLES:
   # Extract with debug output
   ordis extract --schema schema.json --input data.txt --debug
 
-For more information, visit: https://github.com/ordis-dev/ordis-cli
+For more information, visit: https://github.com/ordis-dev/ordis
 `);
 }
 
 function showVersion(): void {
-    console.log(`ordis-cli v${packageJson.version}`);
+    console.log(`ordis v${packageJson.version}`);
 }
 
 async function runExtraction(args: CliArgs): Promise<void> {

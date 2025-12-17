@@ -1,5 +1,5 @@
 /**
- * Schema type definitions for ordis-cli
+ * Schema type definitions for Ordis
  * 
  * Defines the structure and types used for schema validation.
  */

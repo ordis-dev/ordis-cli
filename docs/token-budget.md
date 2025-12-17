@@ -18,7 +18,7 @@ Token budget awareness prevents context overflow by tracking token usage and pro
 Token counting is automatic - no changes needed to existing code:
 
 ```typescript
-import { LLMClient } from 'ordis-cli';
+import { LLMClient } from '@ordis-dev/ordis';
 
 const client = new LLMClient({
     baseURL: 'http://localhost:11434/v1',
@@ -135,7 +135,7 @@ When approaching limits (default: ≥90%):
 Use token counting without LLMClient:
 
 ```typescript
-import { TokenCounter, estimateTokens } from 'ordis-cli';
+import { TokenCounter, estimateTokens } from '@ordis-dev/ordis';
 
 // Estimate tokens for text
 const tokens = estimateTokens('Hello, world!');

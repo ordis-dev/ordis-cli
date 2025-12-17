@@ -2,7 +2,7 @@
 
 ## Overview
 
-Confidence scoring is a core design principle in ordis-cli that allows users to define acceptable levels of certainty for LLM-based data extraction. Rather than accepting any extraction result, users can specify confidence thresholds to ensure data quality meets their requirements.
+Confidence scoring is a core design principle in Ordis that allows users to define acceptable levels of certainty for LLM-based data extraction. Rather than accepting any extraction result, users can specify confidence thresholds to ensure data quality meets their requirements.
 
 ## Core Principle
 
@@ -214,7 +214,7 @@ A 75% confident extraction might be:
 - ❌ Unacceptable for processing invoices
 - ⚠️ Useful with manual review for legal contracts
 
-By making confidence explicit and configurable, ordis-cli puts users in control of the quality-throughput tradeoff rather than making that decision for them.
+By making confidence explicit and configurable, Ordis puts users in control of the quality-throughput tradeoff rather than making that decision for them.
 
 ## Future Enhancements
 

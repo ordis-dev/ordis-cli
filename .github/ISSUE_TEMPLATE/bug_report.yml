@@ -55,7 +55,7 @@ body:
       placeholder: |
         - OS: macOS 14.0
         - Node.js: 18.17.0
-        - ordis-cli: 0.1.0
+        - @ordis-dev/ordis: 0.1.0
         - LLM provider: Ollama (llama3.1:8b)
     validations:
       required: true
