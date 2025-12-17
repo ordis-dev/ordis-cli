@@ -14,7 +14,7 @@ body:
       label: Description
       description: Brief explanation of what needs to be done and why
       placeholder: |
-        Create the initial project structure for ordis-cli including:
+        Create the initial project structure for Ordis including:
         - TypeScript/Node.js setup
         - Basic CLI entrypoint
         - Project configuration files

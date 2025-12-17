@@ -1,6 +1,6 @@
-# Ordis CLI
+# Ordis
 
-Ordis is a local-first CLI tool that turns messy, unstructured text into clean, structured data using a schema-driven extraction pipeline powered by LLMs. You give it a schema that describes the fields you expect, point it at some raw text, and choose any OpenAI-compatible model. Ordis builds the prompt, calls the model, validates the output, and returns either a correct structured record or a clear error.
+Ordis is a local-first tool and library that turns messy, unstructured text into clean, structured data using a schema-driven extraction pipeline powered by LLMs. You give it a schema that describes the fields you expect, point it at some raw text, and choose any OpenAI-compatible model. Ordis builds the prompt, calls the model, validates the output, and returns either a correct structured record or a clear error.
 
 **Ordis does for LLM extraction what Prisma does for databases: strict schemas, predictable output and no more glue code.**
 
@@ -16,7 +16,7 @@ Ordis is a local-first CLI tool that turns messy, unstructured text into clean, 
 - **Schema-first workflow**: Define your data structure upfront
 - **Deterministic output**: Returns validated records or structured failures
 - **Token budget awareness**: Automatic token counting with warnings and limits
-- **Dual-purpose**: Use as CLI tool or import as library
+- **Dual-purpose**: Use as a CLI or import as a library
 - **TypeScript support**: Full type definitions included
 
 ## Example
@@ -57,25 +57,29 @@ Works with any service exposing an OpenAI-compatible API:
 
 ## Installation
 
-### As a CLI Tool
+### From npm (recommended)
+
+Install globally to use the CLI anywhere:
 
 ```bash
-git clone https://github.com/ordis-dev/ordis-cli
-cd ordis-cli
+npm install -g @ordis-dev/ordis
+ordis --help
+```
+
+Or install locally in your project:
+
+```bash
+npm install @ordis-dev/ordis
+```
+
+### From Source
+
+```bash
+git clone https://github.com/ordis-dev/ordis
+cd ordis
 npm install
 npm run build
-```
-
-Run the CLI:
-
-```bash
 node dist/cli.js --help
-```
-
-### As an npm Package
-
-```bash
-npm install ordis-cli
 ```
 
 ## Usage
@@ -95,10 +99,10 @@ ordis extract \
 
 ### Programmatic Usage
 
-Use ordis-cli as a library in your Node.js application:
+Use ordis as a library in your Node.js application:
 
 ```typescript
-import { extract, loadSchema, LLMClient } from 'ordis-cli';
+import { extract, loadSchema, LLMClient } from '@ordis-dev/ordis';
 
 // Load schema from file
 const schema = await loadSchema('./invoice.schema.json');
@@ -138,7 +142,7 @@ if (result.success) {
 **Using LLM Presets:**
 
 ```typescript
-import { extract, loadSchema, LLMPresets } from 'ordis-cli';
+import { extract, loadSchema, LLMPresets } from '@ordis-dev/ordis';
 
 const schema = await loadSchema('./schema.json');
 
@@ -175,13 +179,13 @@ npm run benchmark
 ```
 
 ## Roadmap
-Smart input truncation ([#40](https://github.com/ordis-dev/ordis-cli/issues/40))
-- [ ] Multi-pass extraction for large inputs ([#41](https://github.com/ordis-dev/ordis-cli/issues/41))
+Smart input truncation ([#40](https://github.com/ordis-dev/ordis/issues/40))
+- [ ] Multi-pass extraction for large inputs ([#41](https://github.com/ordis-dev/ordis/issues/41))
 - [ ] 
-- [ ] Config file support ([#16](https://github.com/ordis-dev/ordis-cli/issues/16))
-- [ ] Output formatting options ([#14](https://github.com/ordis-dev/ordis-cli/issues/14))
-- [ ] Batch extraction ([#19](https://github.com/ordis-dev/ordis-cli/issues/19))
-- [ ] More example schemas ([#13](https://github.com/ordis-dev/ordis-cli/issues/13))
+- [ ] Config file support ([#16](https://github.com/ordis-dev/ordis/issues/16))
+- [ ] Output formatting options ([#14](https://github.com/ordis-dev/ordis/issues/14))
+- [ ] Batch extraction ([#19](https://github.com/ordis-dev/ordis/issues/19))
+- [ ] More example schemas ([#13](https://github.com/ordis-dev/ordis/issues/13))
 
 ## Contributing
 

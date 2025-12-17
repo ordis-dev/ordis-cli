@@ -1,5 +1,5 @@
 /**
- * Ordis CLI - Public API
+ * Ordis - Public API
  * Main entry point for programmatic usage
  */
 

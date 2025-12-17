@@ -16,7 +16,7 @@ describe('CLI', () => {
         it('should display help with --help flag', async () => {
             const { stdout } = await execAsync(`node ${CLI_PATH} --help`);
             
-            expect(stdout).toContain('Ordis CLI');
+            expect(stdout).toContain('Ordis');
             expect(stdout).toContain('USAGE:');
             expect(stdout).toContain('ordis extract');
             expect(stdout).toContain('--schema');
@@ -28,7 +28,7 @@ describe('CLI', () => {
         it('should display help with -h flag', async () => {
             const { stdout } = await execAsync(`node ${CLI_PATH} -h`);
             
-            expect(stdout).toContain('Ordis CLI');
+            expect(stdout).toContain('Ordis');
         });
     });
 
@@ -36,14 +36,14 @@ describe('CLI', () => {
         it('should display version with --version flag', async () => {
             const { stdout } = await execAsync(`node ${CLI_PATH} --version`);
             
-            expect(stdout).toContain('ordis-cli v');
+            expect(stdout).toContain('ordis v');
             expect(stdout).toMatch(/v\d+\.\d+\.\d+/);
         });
 
         it('should display version with -v flag', async () => {
             const { stdout } = await execAsync(`node ${CLI_PATH} -v`);
             
-            expect(stdout).toContain('ordis-cli v');
+            expect(stdout).toContain('ordis v');
             expect(stdout).toMatch(/v\d+\.\d+\.\d+/);
         });
     });

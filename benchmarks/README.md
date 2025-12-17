@@ -1,6 +1,6 @@
 # Performance Benchmarks
 
-This directory contains performance benchmarks for ordis-cli to measure extraction speed and identify bottlenecks.
+This directory contains performance benchmarks for Ordis to measure extraction speed and identify bottlenecks.
 
 ## Running Benchmarks
 

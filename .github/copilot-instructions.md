@@ -1,8 +1,8 @@
-# Copilot Instructions for ordis-cli
+# Copilot Instructions for Ordis
 
 ## Project Overview
 
-**ordis-cli** is a CLI tool for extracting structured data from unstructured text using schema-first LLM pipelines. The project emphasizes deterministic, validated output over "close enough" results.
+**Ordis** is a tool and library for extracting structured data from unstructured text using schema-first LLM pipelines. The project emphasizes deterministic, validated output over "close enough" results.
 
 ### Core Principles
 

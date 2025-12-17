@@ -15,7 +15,7 @@ const benchmarkFiles = readdirSync(benchmarksDir)
     .sort();
 
 console.log('╔═══════════════════════════════════════════════════════╗');
-console.log('║         Ordis CLI Performance Benchmarks             ║');
+console.log('║         Ordis Performance Benchmarks                 ║');
 console.log('╚═══════════════════════════════════════════════════════╝\n');
 
 for (const file of benchmarkFiles) {
@@ -28,7 +28,8 @@ for (const file of benchmarkFiles) {
         
         execSync(`npx tsx ${benchmarkPath}`, { stdio: 'inherit' });
     } catch (error) {
-        console.error(`\n❌ Error running ${file}:`, error.message);
+        const message = error instanceof Error ? error.message : String(error);
+        console.error(`\n❌ Error running ${file}:`, message);
     }
 }
 
