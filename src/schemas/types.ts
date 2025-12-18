@@ -20,6 +20,7 @@ export interface FieldDefinition {
     min?: number;
     max?: number;
     pattern?: string;
+    format?: string; // JSON Schema format specifier (e.g., 'date-time', 'email', 'uri')
 }
 
 /**

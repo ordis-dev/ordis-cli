@@ -38,10 +38,24 @@ ordis extract \
     "invoice_id": { "type": "string" },
     "amount": { "type": "number" },
     "currency": { "type": "string", "enum": ["USD", "SGD", "EUR"] },
-    "date": { "type": "date", "optional": true }
+    "date": { 
+      "type": "string",
+      "format": "date-time",
+      "optional": true,
+      "description": "Invoice date in ISO 8601 format"
+    }
   }
 }
 ```
+
+**Supported field properties:**
+- `type`: Field type (string, number, date, boolean, enum)
+- `description`: Human-readable field description
+- `optional`: Whether field can be null (default: false)
+- `enum`: Allowed values for enum types
+- `min`/`max`: Range constraints for numbers
+- `pattern`: Regex pattern for strings
+- `format`: JSON Schema format hint (e.g., 'date-time', 'email', 'uri', 'uuid')
 
 ## Model Compatibility
 

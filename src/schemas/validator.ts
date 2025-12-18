@@ -146,6 +146,15 @@ function validateFieldDefinition(fieldName: string, fieldDef: unknown): void {
         );
     }
 
+    // Validate format if present
+    if (def.format !== undefined && typeof def.format !== 'string') {
+        throw new SchemaValidationError(
+            `Field '${fieldName}' format must be a string`,
+            ErrorCodes.INVALID_CONSTRAINT,
+            fieldName
+        );
+    }
+
     // Type-specific validations
     const fieldType = def.type as FieldType;
 

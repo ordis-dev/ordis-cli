@@ -1,0 +1,28 @@
+{
+  "metadata": {
+    "name": "Format Test Schema",
+    "description": "Demonstrates format field parameter support"
+  },
+  "fields": {
+    "event_name": {
+      "type": "string",
+      "description": "Name of the event"
+    },
+    "event_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date and time when the event occurs"
+    },
+    "contact_email": {
+      "type": "string",
+      "format": "email",
+      "description": "Contact email address"
+    },
+    "website": {
+      "type": "string",
+      "format": "uri",
+      "optional": true,
+      "description": "Website URL"
+    }
+  }
+}

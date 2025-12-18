@@ -27,6 +27,9 @@ Schema:
         if (fieldDef.optional) {
             promptText += ' (optional)';
         }
+        if (fieldDef.format) {
+            promptText += ` [format: ${fieldDef.format}]`;
+        }
         if (fieldDef.description) {
             promptText += ` - ${fieldDef.description}`;
         }
