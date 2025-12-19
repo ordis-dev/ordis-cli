@@ -6,8 +6,9 @@
 
 /**
  * Supported field types in schema definitions
+ * Note: For dates, use type='string' with format='date-time'
  */
-export type FieldType = 'string' | 'number' | 'date' | 'enum' | 'boolean';
+export type FieldType = 'string' | 'number' | 'integer' | 'boolean';
 
 /**
  * Field definition within a schema
