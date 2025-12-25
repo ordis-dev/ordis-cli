@@ -2,8 +2,8 @@
  * Schema loader - loads and parses schema files
  */
 
-import * as fs from 'fs/promises';
-import * as path from 'path';
+import * as fs from 'node:fs/promises';
+import * as path from 'node:path';
 import type { Schema } from './types.js';
 import { validateSchema } from './validator.js';
 import { SchemaValidationError, ErrorCodes } from './errors.js';

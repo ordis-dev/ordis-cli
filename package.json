@@ -2,7 +2,7 @@
   "name": "@ordis-dev/ordis",
   "version": "0.1.0",
   "type": "module",
-  "description": "Schema-first LLM extraction tool that turns unstructured text into validated structured data",
+  "description": "Schema-first LLM extraction tool that turns unstructured text into validated structured data. Works with Node.js, Deno, and Bun.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
@@ -34,7 +34,15 @@
     "validation",
     "cli",
     "openai",
-    "ollama"
+    "ollama",
+    "cross-platform",
+    "deno",
+    "bun",
+    "nodejs",
+    "webstandards",
+    "typescript",
+    "javascript",
+    "jsonschema"
   ],
   "author": "Ordis",
   "license": "MIT",

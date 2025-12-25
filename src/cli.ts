@@ -5,8 +5,9 @@
  * CLI entrypoint
  */
 
-import * as fs from 'fs/promises';
-import * as path from 'path';
+import process from 'node:process';
+import * as fs from 'node:fs/promises';
+import * as path from 'node:path';
 import { loadSchema } from './schemas/loader.js';
 import { extract } from './core/pipeline.js';
 import type { LLMConfig } from './llm/types.js';
