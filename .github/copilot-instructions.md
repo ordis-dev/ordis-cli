@@ -43,6 +43,7 @@ examples/            # Sample schemas and input files
 - **Debug**: Use `--debug` flag for verbose output
 - **Test**: `npm test` (must pass before committing)
 - **Benchmark**: `npm run benchmark` (run after tests, before committing to verify performance)
+- **GitHub CLI**: When viewing issues, PRs, or status with `gh`, always pipe to `cat` (e.g., `gh issue view 12 | cat`) to ensure text output is readable by Copilot
 
 ## Conventions
 

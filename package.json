@@ -34,7 +34,15 @@
     "validation",
     "cli",
     "openai",
-    "ollama"
+    "ollama",
+    "cross-platform",
+    "deno",
+    "bun",
+    "nodejs",
+    "webstandards",
+    "typescript",
+    "javascript",
+    "jsonschema"
   ],
   "author": "Ordis",
   "license": "MIT",

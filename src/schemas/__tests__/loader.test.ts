@@ -3,8 +3,8 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import * as fs from 'fs/promises';
-import * as path from 'path';
+import * as fs from 'node:fs/promises';
+import * as path from 'node:path';
 import { loadSchema, parseSchema, loadSchemaFromObject } from '../loader.js';
 import { SchemaValidationError, ErrorCodes } from '../errors.js';
 import type { Schema } from '../types.js';
