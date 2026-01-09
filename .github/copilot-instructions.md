@@ -61,6 +61,25 @@ examples/            # Sample schemas and input files
 - **Schema format**: JSON-based field definitions with types and constraints
 - **Output format**: Validated JSON matching the schema or structured error response
 
+## Release Process
+
+When publishing a new version to npm:
+
+1. **Create release branch**: `git checkout -b release/x.y.z` from `main`
+2. **Bump version**: `npm version [patch|minor|major] -m "chore: bump version to %s"`
+   - Patch (0.0.x): Bug fixes only
+   - Minor (0.x.0): New features, backwards compatible
+   - Major (x.0.0): Breaking changes
+3. **Push branch and tag**: `git push origin release/x.y.z && git push origin vx.y.z`
+4. **Build and test**: `npm run build && npm test`
+5. **Publish to npm**: `npm publish --access public`
+6. **Create PR to merge release branch to main**
+7. **Update README.md** (in the release branch before merging):
+   - Update "Completed in vX.Y.Z" section with new features
+   - Move completed roadmap items from "Upcoming" to "Completed"
+   - Add any new roadmap items to "Upcoming"
+8. **Create GitHub Release** (optional): Document changes at https://github.com/ordis-dev/ordis/releases
+
 ## Contributing
 
 When creating issues or pull requests:

@@ -16,6 +16,7 @@ Ordis is a local-first tool and library that turns messy, unstructured text into
 - **Schema-first workflow**: Define your data structure upfront
 - **Deterministic output**: Returns validated records or structured failures
 - **Token budget awareness**: Automatic token counting with warnings and limits
+- **HTML preprocessing**: Strip noise from web pages before extraction
 - **Dual-purpose**: Use as a CLI or import as a library
 - **TypeScript support**: Full type definitions included
 
@@ -167,6 +168,30 @@ const result = await extract({
 });
 ```
 
+**Extracting from HTML:**
+
+```typescript
+import { extract, loadSchema } from '@ordis-dev/ordis';
+
+const schema = await loadSchema('./schema.json');
+
+// Strip HTML noise before extraction
+const result = await extract({
+  input: rawHtmlContent,
+  schema,
+  llmConfig: { baseURL: 'http://localhost:11434/v1', model: 'llama3.2:3b' },
+  preprocessing: {
+    stripHtml: true  // Removes scripts, styles, nav, ads, etc.
+    // Or with options:
+    // stripHtml: {
+    //   preserveStructure: true,  // Convert headings/lists to markdown
+    //   removeSelectors: ['.sidebar', '#comments'],
+    //   maxLength: 10000
+    // }
+  }
+});
+```
+
 ## What Works
 
 - ✅ Schema loader and validator
@@ -179,6 +204,7 @@ const result = await extract({
 - ✅ Field-level confidence tracking
 - ✅ TypeScript type definitions
 - ✅ Performance benchmarks
+- ✅ HTML preprocessing for noisy web content
 
 ## Performance
 
@@ -190,6 +216,13 @@ npm run benchmark
 ```
 
 ## Roadmap
+
+**Completed in v0.2.0:**
+- ✅ HTML stripping/preprocessing before extraction ([#59](https://github.com/ordis-dev/ordis/issues/59))
+  - `stripHtml: true` removes HTML tags, keeps text content
+  - `preserveStructure: true` converts headings/lists to markdown-like format
+  - `removeSelectors` for custom element removal
+  - Automatic removal of scripts, styles, nav, footer, ads
 
 **Completed in v0.1.0:**
 - ✅ Core extraction pipeline with schema validation
