@@ -206,11 +206,20 @@ async function runExtraction(args: CliArgs): Promise<void> {
             process.exit(0);
         } else {
             // Output failure with formatted errors
-            const formattedErrors = result.errors.map((err) => ({
-                message: formatError(err),
-                code: err.code,
-                field: err.field,
-            }));
+            const formattedErrors = result.errors.map((err: any) => {
+                // If we have the original error in details, format that
+                const errorToFormat = err.details?.error || err;
+                const formatted = formatError(errorToFormat, {
+                    model: args.model,
+                    baseURL: args.base,
+                });
+                
+                return {
+                    message: formatted,
+                    code: err.code,
+                    field: err.field,
+                };
+            });
 
             const output = {
                 success: false,

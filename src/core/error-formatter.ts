@@ -214,10 +214,15 @@ export function formatLLMError(error: LLMError, context?: {
             
             if (msg.includes('context') || msg.includes('token') || msg.includes('length')) {
                 formatted.title = 'Context Window Exceeded';
-                formatted.suggestion = formatLLMError(
-                    { ...error, code: LLMErrorCodes.TOKEN_LIMIT_EXCEEDED } as LLMError,
-                    context
-                ).suggestion;
+                formatted.suggestion = `The input is too large for this model's context window.\n` +
+                                     `  • Model: ${context?.model || 'unknown'}\n` +
+                                     `  • Input length: ~${context?.inputLength || 'unknown'} characters\n` +
+                                     `\n` +
+                                     `  Solutions:\n` +
+                                     `  • Reduce input size (extract relevant sections only)\n` +
+                                     `  • Use HTML preprocessing to strip noise: --strip-html\n` +
+                                     `  • Switch to a model with larger context window\n` +
+                                     `  • Split extraction into multiple passes (coming soon)`;
             } else if (msg.includes('model') && msg.includes('not found')) {
                 formatted.title = 'Model Not Found';
                 formatted.suggestion = `The specified model is not available.\n` +
@@ -299,8 +304,14 @@ export function formatError(
         return `Unknown error: ${String(error)}`;
     }
 
+    // Handle validation error plain objects from pipeline
+    if ('field' in error && 'code' in error && 'message' in error) {
+        const validationError = error as any;
+        return formatValidationError(validationError, undefined, validationError.value);
+    }
+
     // Handle LLMError
-    if (error instanceof Error && 'code' in error && error.code in LLMErrorCodes) {
+    if (error instanceof Error && 'code' in error && typeof error.code === 'string' && error.code in LLMErrorCodes) {
         return formatLLMError(error as LLMError, context);
     }
 
