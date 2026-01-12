@@ -56,7 +56,7 @@ export interface StepResult {
     step: string;
     success: boolean;
     data?: unknown;
-    error?: string;
+    error?: unknown;  // Preserve full error object for formatting
     duration?: number;
 }
 
@@ -73,6 +73,7 @@ export interface PipelineResult {
         field?: string;
         message: string;
         code: string;
+        details?: Record<string, unknown>; // Original error details for formatting
     }>;
     steps?: StepResult[];
     metadata: {

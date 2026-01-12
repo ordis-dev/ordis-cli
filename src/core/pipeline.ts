@@ -171,6 +171,7 @@ export class ExtractionPipeline {
                         {
                             message: error.message,
                             code: error.code,
+                            details: error.details, // Include original error details
                         },
                     ],
                     steps: this.debug ? steps : undefined,
@@ -220,7 +221,7 @@ export class ExtractionPipeline {
             return {
                 step: name,
                 success: false,
-                error: (error as Error).message,
+                error,  // Preserve full error object for formatting
                 duration,
             };
         }
@@ -245,7 +246,7 @@ export class ExtractionPipeline {
             return {
                 step: name,
                 success: false,
-                error: (error as Error).message,
+                error,  // Preserve full error object for formatting
                 duration,
             };
         }

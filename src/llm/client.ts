@@ -61,8 +61,13 @@ export class LLMClient {
         const usage = this.tokenCounter.calculateUsage(system, user);
         
         // Debug logging if enabled
-        if (this.config.debugTokens) {
-            console.error('[Token Usage]\n' + this.tokenCounter.formatUsage(usage));
+        if (this.config.debug || this.config.debugTokens) {
+            console.error('[DEBUG] Token Usage:\n' + this.tokenCounter.formatUsage(usage));
+        }
+
+        if (this.config.debug) {
+            console.error('[DEBUG] System Prompt:\n' + system);
+            console.error('[DEBUG] User Prompt:\n' + user.substring(0, 500) + (user.length > 500 ? '...' : ''));
         }
 
         // Error if over limit
@@ -93,6 +98,10 @@ export class LLMClient {
 
         // Call API with retries
         const response = await this.chatWithRetry(request);
+
+        if (this.config.debug) {
+            console.error('[DEBUG] LLM Response:\n' + JSON.stringify(response, null, 2));
+        }
 
         // Parse response
         return this.parseExtractionResponse(response);
@@ -239,8 +248,22 @@ export class LLMClient {
         const details: Record<string, unknown> = {};
 
         try {
-            const errorData = await response.json() as { error?: { message?: string } };
-            errorMessage = errorData.error?.message || errorMessage;
+            const errorData = await response.json() as { error?: { message?: string; type?: string } };
+            const rawMessage = errorData.error?.message || errorMessage;
+            errorMessage = rawMessage;
+            
+            // Detect context window/token limit errors from various providers
+            const msgLower = rawMessage.toLowerCase();
+            if (msgLower.includes('context length') || 
+                msgLower.includes('maximum context') ||
+                msgLower.includes('context_length_exceeded') ||
+                msgLower.includes('token limit') ||
+                msgLower.includes('too many tokens') ||
+                msgLower.includes('prompt is too long') ||
+                (msgLower.includes('context') && msgLower.includes('exceed'))) {
+                errorCode = LLMErrorCodes.TOKEN_LIMIT_EXCEEDED;
+                details.originalMessage = rawMessage;
+            }
         } catch {
             // If we can't parse error JSON, use status text
         }

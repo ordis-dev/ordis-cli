@@ -11,6 +11,7 @@ import * as path from 'node:path';
 import { loadSchema } from './schemas/loader.js';
 import { extract } from './core/pipeline.js';
 import type { LLMConfig } from './llm/types.js';
+import { formatError, formatValidationErrors } from './core/error-formatter.js';
 import packageJson from '../package.json' with { type: 'json' };
 
 interface CliArgs {
@@ -158,6 +159,7 @@ async function runExtraction(args: CliArgs): Promise<void> {
             baseURL: args.base,
             model: args.model,
             ...(args.apiKey && { apiKey: args.apiKey }),
+            debug: args.debug,
         };
 
         if (args.debug) {
@@ -204,10 +206,25 @@ async function runExtraction(args: CliArgs): Promise<void> {
             console.log(JSON.stringify(output, null, 2));
             process.exit(0);
         } else {
-            // Output failure with errors
+            // Output failure with formatted errors
+            const formattedErrors = result.errors.map((err: any) => {
+                // If we have the original error in details, format that
+                const errorToFormat = err.details?.error || err;
+                const formatted = formatError(errorToFormat, {
+                    model: args.model,
+                    baseURL: args.base,
+                });
+                
+                return {
+                    message: formatted,
+                    code: err.code,
+                    field: err.field,
+                };
+            });
+
             const output = {
                 success: false,
-                errors: result.errors,
+                errors: formattedErrors,
                 data: result.data, // May be partial
                 confidence: result.confidence,
                 meetsThreshold: result.meetsThreshold,
@@ -218,16 +235,17 @@ async function runExtraction(args: CliArgs): Promise<void> {
             process.exit(1);
         }
     } catch (error) {
-        // Handle unexpected errors
+        // Handle unexpected errors with formatted messages
         if (args.debug && error instanceof Error) {
             console.error('[DEBUG] Stack trace:', error.stack);
         }
 
+        const formattedMessage = formatError(error);
         const errorOutput = {
             success: false,
             errors: [
                 {
-                    message: error instanceof Error ? error.message : String(error),
+                    message: formattedMessage,
                     code: (error as any).code || 'UNKNOWN_ERROR',
                 },
             ],
