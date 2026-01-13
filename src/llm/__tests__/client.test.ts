@@ -197,6 +197,152 @@ describe('LLMClient', () => {
         });
     });
 
+    describe('markdown unwrapping', () => {
+        const schema: Schema = {
+            fields: {
+                name: { type: 'string' },
+            },
+        };
+
+        const createMockResponse = (content: string): LLMResponse => ({
+            id: 'test-id',
+            object: 'chat.completion',
+            created: Date.now(),
+            model: 'test-model',
+            choices: [
+                {
+                    index: 0,
+                    message: { role: 'assistant', content },
+                    finish_reason: 'stop',
+                },
+            ],
+        });
+
+        it('should handle response with headers before code block', async () => {
+            const content = `### Extraction Result
+
+\`\`\`json
+{"data":{"name":"Bob"},"confidence":85,"confidenceByField":{"name":85}}
+\`\`\``;
+
+            vi.mocked(fetch).mockResolvedValueOnce({
+                ok: true,
+                json: async () => createMockResponse(content),
+            } as Response);
+
+            const client = new LLMClient({
+                baseURL: 'http://localhost:11434/v1',
+                model: 'qwen2.5:32b',
+            });
+
+            const result = await client.extract({ schema, input: 'Name: Bob' });
+            expect(result.data.name).toBe('Bob');
+        });
+
+        it('should handle code block without json language tag', async () => {
+            const content = `\`\`\`
+{"data":{"name":"Carol"},"confidence":90,"confidenceByField":{"name":90}}
+\`\`\``;
+
+            vi.mocked(fetch).mockResolvedValueOnce({
+                ok: true,
+                json: async () => createMockResponse(content),
+            } as Response);
+
+            const client = new LLMClient({
+                baseURL: 'http://localhost:11434/v1',
+                model: 'test-model',
+            });
+
+            const result = await client.extract({ schema, input: 'Name: Carol' });
+            expect(result.data.name).toBe('Carol');
+        });
+
+        it('should handle JSON with leading text (no code block)', async () => {
+            const content = `Here is the extracted data:
+{"data":{"name":"Dan"},"confidence":88,"confidenceByField":{"name":88}}`;
+
+            vi.mocked(fetch).mockResolvedValueOnce({
+                ok: true,
+                json: async () => createMockResponse(content),
+            } as Response);
+
+            const client = new LLMClient({
+                baseURL: 'http://localhost:11434/v1',
+                model: 'test-model',
+            });
+
+            const result = await client.extract({ schema, input: 'Name: Dan' });
+            expect(result.data.name).toBe('Dan');
+        });
+
+        it('should handle JSON with trailing text', async () => {
+            const content = `{"data":{"name":"Eve"},"confidence":92,"confidenceByField":{"name":92}}
+
+I hope this helps!`;
+
+            vi.mocked(fetch).mockResolvedValueOnce({
+                ok: true,
+                json: async () => createMockResponse(content),
+            } as Response);
+
+            const client = new LLMClient({
+                baseURL: 'http://localhost:11434/v1',
+                model: 'test-model',
+            });
+
+            const result = await client.extract({ schema, input: 'Name: Eve' });
+            expect(result.data.name).toBe('Eve');
+        });
+
+        it('should handle nested JSON with strings containing braces', async () => {
+            const content = `\`\`\`json
+{"data":{"name":"Test {with} braces"},"confidence":90,"confidenceByField":{"name":90}}
+\`\`\``;
+
+            vi.mocked(fetch).mockResolvedValueOnce({
+                ok: true,
+                json: async () => createMockResponse(content),
+            } as Response);
+
+            const client = new LLMClient({
+                baseURL: 'http://localhost:11434/v1',
+                model: 'test-model',
+            });
+
+            const result = await client.extract({ schema, input: 'Name: Test' });
+            expect(result.data.name).toBe('Test {with} braces');
+        });
+
+        it('should handle array response in code block', async () => {
+            const schemaWithArray: Schema = {
+                fields: {
+                    items: { 
+                        type: 'array',
+                        items: { type: 'object', properties: { name: { type: 'string' } } }
+                    },
+                },
+            };
+
+            const content = `\`\`\`json
+{"data":{"items":[{"name":"A"},{"name":"B"}]},"confidence":95,"confidenceByField":{"items":95}}
+\`\`\``;
+
+            vi.mocked(fetch).mockResolvedValueOnce({
+                ok: true,
+                json: async () => createMockResponse(content),
+            } as Response);
+
+            const client = new LLMClient({
+                baseURL: 'http://localhost:11434/v1',
+                model: 'test-model',
+            });
+
+            const result = await client.extract({ schema: schemaWithArray, input: 'Items: A, B' });
+            expect((result.data.items as Array<{name: string}>)[0].name).toBe('A');
+        });
+    });
+
     describe('error handling', () => {
         it('should handle 401 authentication error', async () => {
             vi.mocked(fetch).mockResolvedValueOnce({
