@@ -288,6 +288,96 @@ export class LLMClient {
     }
 
     /**
+     * Extracts JSON from LLM response, handling markdown wrapping
+     * 
+     * Handles common patterns:
+     * - Raw JSON: { ... }
+     * - Markdown code block: ```json\n{...}\n```
+     * - With headers: ### Extraction\n```json\n{...}\n```
+     * - Partial code blocks: ```{...}``` or ```json{...}```
+     * - JSON with trailing text
+     * 
+     * @param response - Raw LLM response content
+     * @returns Extracted JSON string
+     */
+    private unwrapMarkdownJSON(response: string): string {
+        const trimmed = response.trim();
+        
+        // Try to extract from markdown code block first (most common wrapper)
+        // Matches: ```json\n{...}\n``` or ```\n{...}\n```
+        const codeBlockMatch = trimmed.match(/```(?:json)?\s*([\s\S]*?)```/);
+        if (codeBlockMatch) {
+            const extracted = codeBlockMatch[1].trim();
+            // Verify it looks like JSON
+            if (extracted.startsWith('{') || extracted.startsWith('[')) {
+                return extracted;
+            }
+        }
+
+        // Find first { or [ 
+        const firstBrace = trimmed.indexOf('{');
+        const firstBracket = trimmed.indexOf('[');
+        
+        if (firstBrace === -1 && firstBracket === -1) {
+            // No JSON found, return original (will fail parsing with clear error)
+            return trimmed;
+        }
+
+        const jsonStart = firstBrace === -1 ? firstBracket :
+                          firstBracket === -1 ? firstBrace :
+                          Math.min(firstBrace, firstBracket);
+
+        // Extract from JSON start
+        const jsonContent = trimmed.slice(jsonStart);
+
+        // Find matching closing bracket to remove trailing text
+        const startChar = jsonContent[0];
+        const endChar = startChar === '{' ? '}' : ']';
+        
+        let depth = 0;
+        let inString = false;
+        let escapeNext = false;
+        let endIndex = -1;
+
+        for (let i = 0; i < jsonContent.length; i++) {
+            const char = jsonContent[i];
+
+            if (escapeNext) {
+                escapeNext = false;
+                continue;
+            }
+
+            if (char === '\\' && inString) {
+                escapeNext = true;
+                continue;
+            }
+
+            if (char === '"') {
+                inString = !inString;
+                continue;
+            }
+
+            if (inString) continue;
+
+            if (char === startChar) {
+                depth++;
+            } else if (char === endChar) {
+                depth--;
+                if (depth === 0) {
+                    endIndex = i + 1;
+                    break;
+                }
+            }
+        }
+
+        if (endIndex > 0) {
+            return jsonContent.slice(0, endIndex);
+        }
+
+        return jsonContent;
+    }
+
+    /**
      * Parses extraction response from LLM
      */
     private parseExtractionResponse(response: LLMResponse): ExtractionResponse {
@@ -306,14 +396,8 @@ export class LLMClient {
             );
         }
 
-        let content = message.content.trim();
-
-        // Remove markdown code blocks if present
-        if (content.startsWith('```json')) {
-            content = content.replace(/^```json\s*/, '').replace(/\s*```$/, '');
-        } else if (content.startsWith('```')) {
-            content = content.replace(/^```\s*/, '').replace(/\s*```$/, '');
-        }
+        // Extract JSON from response (handles markdown wrapping)
+        const content = this.unwrapMarkdownJSON(message.content);
 
         try {
             const parsed = JSON.parse(content);
