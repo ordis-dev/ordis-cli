@@ -119,10 +119,16 @@ export class LLMClient {
         // Add JSON mode based on provider
         if (this.config.jsonMode) {
             if (this.provider === 'ollama') {
-                // Ollama uses format parameter
-                request.format = 'json';
+                // Check if using OpenAI-compatible endpoint (/v1)
+                if (this.config.baseURL?.includes('/v1')) {
+                    // OpenAI-compatible endpoint needs response_format
+                    request.response_format = { type: 'json_object' };
+                } else {
+                    // Native Ollama API (/api/chat) uses format parameter
+                    request.format = 'json';
+                }
             } else {
-                // OpenAI uses response_format parameter
+                // OpenAI and other providers use response_format parameter
                 request.response_format = { type: 'json_object' };
             }
         }

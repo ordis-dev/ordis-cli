@@ -6,9 +6,10 @@ Some LLM models don't consistently respect prompt instructions to return only JS
 
 Ordis includes JSON mode support that works with both **OpenAI** and **Ollama** providers:
 - **OpenAI**: Uses `response_format: { type: "json_object" }`
-- **Ollama**: Uses `format: "json"`
+- **Ollama (OpenAI-compatible /v1 endpoint)**: Uses `response_format: { type: "json_object" }`
+- **Ollama (native /api endpoint)**: Uses `format: "json"`
 
-The provider type is **auto-detected** from your base URL, or can be explicitly set with the `--provider` flag.
+The provider type is **auto-detected** from your base URL, and the correct parameter is automatically selected based on the endpoint path.
 
 ## When to Use JSON Mode
 
@@ -39,10 +40,31 @@ Uses `response_format: { type: "json_object" }`
 
 **Supported:**
 - Ollama (all models including Llama, Qwen, Gemma, Mistral, etc.)
+  - `/v1/chat/completions` endpoint: Uses `response_format: { type: "json_object" }`
+  - `/api/chat` endpoint: Uses `format: "json"`
 - LM Studio (most models)
 - vLLM servers running Ollama-compatible API
 
-Uses `format: "json"`
+#### Which Ollama Endpoint Should I Use?
+
+Ollama provides two different API endpoints with different trade-offs:
+
+**`/v1/chat/completions` (OpenAI-compatible) - Recommended**
+- ✅ **Portable**: Same base URL works across Ollama, OpenAI, and other providers
+- ✅ **Easier switching**: Change `--model` without changing `--base`
+- ✅ **Standard**: Follows OpenAI API specification
+- ⚠️ **Limited features**: Some Ollama-specific parameters may not work
+- **Example**: `http://localhost:11434/v1`
+
+**`/api/chat` (Native Ollama API)**
+- ✅ **Full features**: All Ollama parameters supported (`format`, `num_ctx`, `num_gpu`, etc.)
+- ✅ **Optimized**: Native Ollama implementation
+- ❌ **Ollama-only**: Must change base URL when switching to other providers
+- **Example**: `http://localhost:11434/api`
+
+**💡 Recommendation**: Use `/v1` for portability. Both endpoints work correctly with Ordis and JSON mode. Switch to `/api` only if you need Ollama-specific runtime options.
+
+**Note:** Ordis automatically detects which endpoint you're using and applies the correct JSON mode parameter ([#81](https://github.com/ordis-dev/ordis/issues/81)).
 
 ## Auto-Detection
 
@@ -118,16 +140,25 @@ const resultExplicit = await extract({
 
 ## How It Works
 
-When `jsonMode: true` is set, Ordis adds the appropriate parameter based on the detected or specified provider:
+When `jsonMode: true` is set, Ordis adds the appropriate parameter based on the detected provider and endpoint:
 
-**For Ollama:**
+**For Ollama with /v1 endpoint (OpenAI-compatible):**
+```json
+{
+  "response_format": {
+    "type": "json_object"
+  }
+}
+```
+
+**For Ollama with /api endpoint (native):**
 ```json
 {
   "format": "json"
 }
 ```
 
-**For OpenAI:**
+**For OpenAI and other providers:**
 ```json
 {
   "response_format": {
