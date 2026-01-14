@@ -6,9 +6,10 @@ Some LLM models don't consistently respect prompt instructions to return only JS
 
 Ordis includes JSON mode support that works with both **OpenAI** and **Ollama** providers:
 - **OpenAI**: Uses `response_format: { type: "json_object" }`
-- **Ollama**: Uses `format: "json"`
+- **Ollama (OpenAI-compatible /v1 endpoint)**: Uses `response_format: { type: "json_object" }`
+- **Ollama (native /api endpoint)**: Uses `format: "json"`
 
-The provider type is **auto-detected** from your base URL, or can be explicitly set with the `--provider` flag.
+The provider type is **auto-detected** from your base URL, and the correct parameter is automatically selected based on the endpoint path.
 
 ## When to Use JSON Mode
 
@@ -39,10 +40,12 @@ Uses `response_format: { type: "json_object" }`
 
 **Supported:**
 - Ollama (all models including Llama, Qwen, Gemma, Mistral, etc.)
+  - `/v1/chat/completions` endpoint: Uses `response_format: { type: "json_object" }`
+  - `/api/chat` endpoint: Uses `format: "json"`
 - LM Studio (most models)
 - vLLM servers running Ollama-compatible API
 
-Uses `format: "json"`
+**Note:** When using Ollama's OpenAI-compatible `/v1` endpoint, Ordis automatically uses `response_format` instead of `format` to ensure proper JSON mode enforcement ([#81](https://github.com/ordis-dev/ordis/issues/81)).
 
 ## Auto-Detection
 
@@ -118,16 +121,25 @@ const resultExplicit = await extract({
 
 ## How It Works
 
-When `jsonMode: true` is set, Ordis adds the appropriate parameter based on the detected or specified provider:
+When `jsonMode: true` is set, Ordis adds the appropriate parameter based on the detected provider and endpoint:
 
-**For Ollama:**
+**For Ollama with /v1 endpoint (OpenAI-compatible):**
+```json
+{
+  "response_format": {
+    "type": "json_object"
+  }
+}
+```
+
+**For Ollama with /api endpoint (native):**
 ```json
 {
   "format": "json"
 }
 ```
 
-**For OpenAI:**
+**For OpenAI and other providers:**
 ```json
 {
   "response_format": {
