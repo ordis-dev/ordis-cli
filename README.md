@@ -121,25 +121,16 @@ ordis extract \
   --api-key your-api-key \
   --json-mode
 
-# Ollama (auto-detected)
+# Ollama (recommended: use /v1 endpoint for portability)
 ordis extract \
   --schema examples/invoice.schema.json \
   --input examples/invoice.txt \
   --base http://localhost:11434/v1 \
   --model qwen2.5:32b \
   --json-mode
-
-# Explicit provider override
-ordis extract \
-  --schema examples/invoice.schema.json \
-  --input examples/invoice.txt \
-  --base http://localhost:11434/v1 \
-  --model qwen2.5:32b \
-  --json-mode \
-  --provider ollama
 ```
 
-JSON mode forces the model to return only valid JSON. Provider is auto-detected from the base URL.
+**💡 Note**: For Ollama, use `http://localhost:11434/v1` for maximum portability across providers. Both `/v1` (OpenAI-compatible) and `/api` (native) endpoints work correctly with JSON mode.
 
 ### Programmatic Usage
 

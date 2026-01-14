@@ -45,7 +45,26 @@ Uses `response_format: { type: "json_object" }`
 - LM Studio (most models)
 - vLLM servers running Ollama-compatible API
 
-**Note:** When using Ollama's OpenAI-compatible `/v1` endpoint, Ordis automatically uses `response_format` instead of `format` to ensure proper JSON mode enforcement ([#81](https://github.com/ordis-dev/ordis/issues/81)).
+#### Which Ollama Endpoint Should I Use?
+
+Ollama provides two different API endpoints with different trade-offs:
+
+**`/v1/chat/completions` (OpenAI-compatible) - Recommended**
+- ✅ **Portable**: Same base URL works across Ollama, OpenAI, and other providers
+- ✅ **Easier switching**: Change `--model` without changing `--base`
+- ✅ **Standard**: Follows OpenAI API specification
+- ⚠️ **Limited features**: Some Ollama-specific parameters may not work
+- **Example**: `http://localhost:11434/v1`
+
+**`/api/chat` (Native Ollama API)**
+- ✅ **Full features**: All Ollama parameters supported (`format`, `num_ctx`, `num_gpu`, etc.)
+- ✅ **Optimized**: Native Ollama implementation
+- ❌ **Ollama-only**: Must change base URL when switching to other providers
+- **Example**: `http://localhost:11434/api`
+
+**💡 Recommendation**: Use `/v1` for portability. Both endpoints work correctly with Ordis and JSON mode. Switch to `/api` only if you need Ollama-specific runtime options.
+
+**Note:** Ordis automatically detects which endpoint you're using and applies the correct JSON mode parameter ([#81](https://github.com/ordis-dev/ordis/issues/81)).
 
 ## Auto-Detection
 
